@@ -1,0 +1,39 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Water Tracker API",
+    "license": {
+      "name": "Apache 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
+    },
+    "description": "This is the documentation for Water Tracker API. Water Tracker is a web application that helps users monitor their daily water intake, set personal goals, and review statistics. The main goal of the application is to improve users' water balance by providing a convenient tool for tracking and analyzing their habits."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:3000"
+    },
+    {
+      "url": "https://example.com/api/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "Users",
+      "description": "Endpoints for user authentication and changing user information."
+    },
+    {
+      "name": "Water",
+      "description": "Endpoints for water quantity managment and statistics."
+    }
+  ],
+  "paths": {},
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  }
+}

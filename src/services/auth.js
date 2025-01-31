@@ -9,8 +9,8 @@ import { AccessTokenLifetime, RefreshTokenLifetime } from "../constants/user.js"
 
 export const Register = async payload => {
     const {email, password} = payload;
-    const user = await UserCollection.findOne({email});
-    if(user) {
+    const User = await UserCollection.findOne({email});
+    if(User) {
         throw createHttpError(409, "User already exists!");
     }
 

@@ -34,6 +34,7 @@
           "Water"
         ],
         "summary": "Get water consumption statistics for a month",
+        "description": "Endpoint returns detailed water consumption statistics for a specific month. Includes daily breakdown with consumption percentages, daily water norm, and number of water intake records.\n",
         "security": [
           {
             "bearerAuth": []
@@ -57,14 +58,15 @@
             "required": true,
             "schema": {
               "type": "integer",
-              "minimum": 2000
+              "minimum": 2000,
+              "example": 2024
             },
-            "description": "Year"
+            "description": "Year of water consumption statistics"
           }
         ],
         "responses": {
           "200": {
-            "description": "Successful operation",
+            "description": "Successful retrieval of monthly water consumption statistics",
             "content": {
               "application/json": {
                 "schema": {
@@ -112,8 +114,28 @@
               }
             }
           },
+          "400": {
+            "description": "Invalid query parameters",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 400
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid month or year"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "401": {
-            "description": "Unauthorized",
+            "description": "Unauthorized access",
             "content": {
               "application/json": {
                 "schema": {

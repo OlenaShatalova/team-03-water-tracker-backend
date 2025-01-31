@@ -1,14 +1,11 @@
-import { getUser } from '../services/userServices.js';
+import createHttpError from 'http-errors';
+import { updateUserService } from '../services/auth.js';
 
-export const GetCurrentUser = async (req, res) => {
-  //   const filter = req.user ? { _id: req.user._id } : { email: req.query.email };
-  //   const currentUser = getUser(filter);
-  const email = req.query.email;
-    const currentUser = await getUser({ email });
-    // const currentUser = req.user after middleware can uncomment
+export const getCurrentUser = async (req, res) => {
+  const currentUser = req.user;
 
   if (!currentUser) {
-    return res.status(404).json({ message: 'User not found' });
+    throw createHttpError(404, 'User not found');
   }
 
   res.status(200).json({
@@ -16,5 +13,24 @@ export const GetCurrentUser = async (req, res) => {
     gender: currentUser.gender,
     dailyNorm: currentUser.dailyNorm,
     avatarUrl: currentUser.avatarUrl,
+    name: currentUser.name,
+  });
+};
+
+export const updateCurrentUser = async (req, res) => {
+  const { _id } = req.user;
+  const updateData = req.body;
+  const updatedUser = await updateUserService({ _id }, updateData);
+
+  if (!updatedUser) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  res.status(200).json({
+    name: updatedUser.name,
+    email: updatedUser.email,
+    gender: updatedUser.gender,
+    dailyNorm: updatedUser.dailyNorm,
+    avatarUrl: updatedUser.avatarUrl,
   });
 };

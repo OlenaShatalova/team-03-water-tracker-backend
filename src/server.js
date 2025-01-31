@@ -10,6 +10,7 @@ import authRouter from './routers/auth.js';
 import waterRouter from './routers/water.js';
 
 import { env } from './utils/env.js';
+import { userRouter } from './routers/userRoute.js';
 
 export const startServer = () => {
   const app = express();
@@ -20,6 +21,7 @@ export const startServer = () => {
   app.use(logger);
 
   app.use('/api/auth', authRouter);
+  app.use('/api/users', userRouter);
   app.use('/api/water', waterRouter);
   app.use('/api-docs', swaggerDocs());
 

@@ -5,44 +5,44 @@ import {randomBytes} from "crypto";
 import { UserCollection } from "../db/models/User.js";
 import { SessionCollection } from "../db/models/Session.js";
 
-import { AccessTokenLifetime, RefreshTokenLifetime } from "../constants/user.js";
+import { ACCESS_TOKEN_LIFETIME,  REFRESH_TOKEN_LIFETIME} from "../constants/user.js";
 
-export const Register = async payload => {
+export const register = async payload => {
     const {email, password} = payload;
-    const User = await UserCollection.findOne({email});
-    if(User) {
+    const user = await UserCollection.findOne({email});
+    if(user) {
         throw createHttpError(409, "User already exists!");
     }
 
-    const HashPassword = await bcrypt.hash(password, 10);
+    const hashPassword = await bcrypt.hash(password, 10);
 
-    const NewUser = await UserCollection.create({...payload, password: HashPassword});
+    const newUser = await UserCollection.create({...payload, password: hashPassword});
 
-    return NewUser;
+    return newUser;
 };
 
-export const Login = async ({email, password}) => {
-    const User = await UserCollection.findOne({email});
-    if(!User) {
+export const login = async ({email, password}) => {
+    const user = await UserCollection.findOne({email});
+    if(!user) {
         throw createHttpError(401, "Email or password invalid");
     }
 
-    const PasswordCompare = await bcrypt.compare(password, User.password);
-    if(!PasswordCompare) {
+    const passwordCompare = await bcrypt.compare(password, user.password);
+    if(!passwordCompare) {
         throw createHttpError(401, "Email or password invalid");
     }
 
-    await SessionCollection.deleteOne({userId: User._id});
+    await SessionCollection.deleteOne({userId: user._id});
 
-    const AccessToken = randomBytes(30).toString("base64");
-    const RefreshToken = randomBytes(30).toString("base64");
+    const accessToken = randomBytes(30).toString("base64");
+    const refreshToken = randomBytes(30).toString("base64");
 
     return SessionCollection.create({
-        userId: User._id,
-        AccessToken,
-        RefreshToken,
-        AccessTokenValidUntil: Date.now() + AccessTokenLifetime,
-        RefreshTokenValidUntil: Date.now() + RefreshTokenLifetime,
+        userId: user._id,
+        accessToken,
+        refreshToken,
+        accessTokenValidUntil: Date.now() + ACCESS_TOKEN_LIFETIME,
+        refreshTokenValidUntil: Date.now() + REFRESH_TOKEN_LIFETIME,
     });
 };
 

@@ -5,7 +5,7 @@ import {randomBytes} from "crypto";
 import { UserCollection } from "../db/models/User.js";
 import { SessionCollection } from "../db/models/Session.js";
 
-import { accessTokenLifetime, refreshTokenLifetime } from "../constants/user.js";
+import { ACCESS_TOKEN_LIFETIME,  REFRESH_TOKEN_LIFETIME} from "../constants/user.js";
 
 export const register = async payload => {
     const {email, password} = payload;
@@ -41,7 +41,11 @@ export const login = async ({email, password}) => {
         userId: user._id,
         accessToken,
         refreshToken,
-        accessTokenValidUntil: Date.now() + accessTokenLifetime,
-        refreshTokenValidUntil: Date.now() + refreshTokenLifetime,
+        accessTokenValidUntil: Date.now() + ACCESS_TOKEN_LIFETIME,
+        refreshTokenValidUntil: Date.now() + REFRESH_TOKEN_LIFETIME,
     });
 };
+
+export const getSession = filter => SessionCollection.findOne(filter);
+
+export const getUser = filter => UserCollection.findOne(filter);

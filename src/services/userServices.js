@@ -1,3 +1,3 @@
 import { UserCollection } from '../db/models/User.js';
 
-export const getUser = (filter) => UserCollection.findOne(filter);
+export const getUser = (someFilter) => UserCollection.findOne(someFilter);

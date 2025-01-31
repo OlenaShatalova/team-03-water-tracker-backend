@@ -4,8 +4,8 @@ export const GetCurrentUser = async (req, res) => {
   //   const filter = req.user ? { _id: req.user._id } : { email: req.query.email };
   //   const currentUser = getUser(filter);
   const email = req.query.email;
-    const currentUser = await getUser({ email });
-    // const currentUser = req.user after middleware can uncomment
+  const currentUser = await getUser({ email });
+  // const currentUser = req.user after middleware can uncomment
 
   if (!currentUser) {
     return res.status(404).json({ message: 'User not found' });

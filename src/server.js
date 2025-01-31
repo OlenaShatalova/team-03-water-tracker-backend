@@ -6,7 +6,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
-import authRouter from './routers/auth.js';
+import AuthRouter from './routers/auth.js';
 import waterRouter from './routers/water.js';
 
 import { env } from './utils/env.js';
@@ -19,7 +19,7 @@ export const startServer = () => {
   app.use(express.static('uploads'));
   app.use(logger);
 
-  app.use('/api/auth', authRouter);
+  app.use('/api/auth', AuthRouter);
   app.use('/api/water', waterRouter);
   app.use('/api-docs', swaggerDocs());
 

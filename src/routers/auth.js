@@ -1,17 +1,17 @@
 import { Router } from 'express';
 
-import * as AuthController from "../controllers/auth.js";
+import * as authController from "../controllers/auth.js";
 
-import { CtrlWrapper } from "../utils/ctrlWrapper.js";
+import { ctrlWrapper } from "../utils/ctrlWrapper.js";
 
-import { ValidateBody } from "../middlewares/validateBody.js";
+import { validateBody } from "../middlewares/validateBody.js";
 
-import { AuthRegisterSchema, AuthLoginSchema } from "../validation/auth.js";
+import { authRegisterSchema, authLoginSchema } from "../validation/auth.js";
 
-const AuthRouter = Router();
+const authRouter = Router();
 
-AuthRouter.post("/register", ValidateBody(AuthRegisterSchema), CtrlWrapper(AuthController.RegisterController));
+authRouter.post("/register", validateBody(authRegisterSchema), ctrlWrapper(authController.registerController));
 
-AuthRouter.post("/login", ValidateBody(AuthLoginSchema), CtrlWrapper(AuthController.LoginController));
+authRouter.post("/login", validateBody(authLoginSchema), ctrlWrapper(authController.loginController));
 
-export default AuthRouter;
+export default authRouter;

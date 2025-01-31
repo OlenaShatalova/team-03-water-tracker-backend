@@ -15,7 +15,9 @@ servers:
   - url: http://localhost:3000
   - url: https://example.com/api/v1
 paths:
-  {}   # Тут будуть визначені маршрути API
+  /water/month:
+    get:
+      $ref: '../swagger/paths/water/month/get.yaml'
 components:
   securitySchemes:
     bearerAuth:

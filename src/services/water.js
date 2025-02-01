@@ -1,5 +1,5 @@
-import { UserCollection } from '../db/models/User';
-import { WaterCollection } from '../db/models/Water';
+import { UserCollection } from '../db/models/User.js';
+import { WaterCollection } from '../db/models/Water.js';
 
 import NodeCache from 'node-cache';
 const cache = new NodeCache({ stdTTL: 60 * 60 });

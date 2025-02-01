@@ -1,5 +1,5 @@
 import * as waterService from '../services/water.js';
-import { todayWater } from '../services/water';
+import { todayWater } from '../services/water.js';
 
 export const todayWaterController = async (req, res) => {
   const userId = req.user._id;

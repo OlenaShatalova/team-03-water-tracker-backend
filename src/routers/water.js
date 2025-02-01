@@ -1,22 +1,21 @@
 import { Router } from 'express';
+import { todayWaterController } from '../controllers/water.js';
 
 import { ctrlWrapper } from '../utils/ctrlWrapper.js';
-import { getMonthWaterStats } from '../controllers/water.js';
+import { monthWaterController } from '../controllers/water.js';
 import { validateQuery } from '../utils/validateQuery.js';
 import { getMonthWaterSchema } from '../validation/water.js';
 import { authenticate } from '../middlewares/authenticate.js';
 
 const waterRouter = Router();
 
-waterRouter.get('/test', (req, res) => {
-  res.json({ message: 'Water route is working' });
-});
+waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
 
 waterRouter.get(
   '/month',
   authenticate,
   validateQuery(getMonthWaterSchema),
-  ctrlWrapper(getMonthWaterStats),
+  ctrlWrapper(monthWaterController),
 );
 
 export default waterRouter;

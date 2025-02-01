@@ -14,7 +14,7 @@ export const todayWaterController = async (req, res) => {
   });
 };
 
-export const updateWaterRate = async (req, res, next) => {
+export const updateWaterRateController = async (req, res, next) => {
   try {
     const { _id } = req.user; // Отримуємо ID користувача з req.user
     const { dailyNorm } = req.body; // Отримуємо dailyNorm з тіла запиту

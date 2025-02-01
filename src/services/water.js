@@ -33,7 +33,6 @@ export const todayWater = async ({ userId }) => {
 };
 
 export const getMonthStatistics = async (userId, month, year) => {
-  // діапазон дат
   const startDate = new Date(year, month - 1, 1);
   const endDate = new Date(year, month, 0);
 

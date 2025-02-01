@@ -1,5 +1,5 @@
-import * as waterService from '../services/water.js';
-import { todayWater } from '../services/water.js';
+// import * as waterService from '../services/water.js';
+import { todayWater, getMonthStatistics } from '../services/water.js';
 
 export const todayWaterController = async (req, res) => {
   const userId = req.user._id;
@@ -18,7 +18,7 @@ export const monthWaterController = async (req, res, next) => {
 
     const userId = req.user._id;
 
-    const monthStats = await waterService.getMonthStatistics(
+    const monthStats = await getMonthStatistics(
       userId,
       Number(month),
       Number(year),

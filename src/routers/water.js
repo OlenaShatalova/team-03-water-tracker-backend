@@ -20,7 +20,7 @@ const waterRouter = Router();
 waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
 
 waterRouter.patch(
-  '/daily-norm',
+  '/water-rate',
   authenticate, // Перевірка авторизації
   validateBody(updateWaterRateSchema), // Валідація тіла запиту
   ctrlWrapper(updateWaterRateController), // Контролер

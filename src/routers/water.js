@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { ctrlWrapper } from '../utils/ctrlWrapper';
-import { todayWaterController } from '../controllers/water';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { todayWaterController } from '../controllers/water.js';
 
 const waterRouter = Router();
 

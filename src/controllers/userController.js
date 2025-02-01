@@ -1,11 +1,9 @@
-import { getUser } from '../services/userServices.js';
+import createHttpError from 'http-errors';
+import { updateUserService } from '../services/auth.js';
+import { saveFileToUploadsDir } from '../utils/saveFileToUploadsDir.js';
 
-export const GetCurrentUser = async (req, res) => {
-  //   const filter = req.user ? { _id: req.user._id } : { email: req.query.email };
-  //   const currentUser = getUser(filter);
-  const email = req.query.email;
-  const currentUser = await getUser({ email });
-  // const currentUser = req.user after middleware can uncomment
+export const getCurrentUser = async (req, res) => {
+  const currentUser = req.user;
 
   if (!currentUser) {
     throw createHttpError(404, 'User not found');

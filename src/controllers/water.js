@@ -14,7 +14,7 @@ export const todayWaterController = async (req, res) => {
 
 export const monthWaterController = async (req, res, next) => {
   try {
-    const { month, year } = req.body; //перевірка боді замість квері
+    const { month, year } = req.query;
 
     const userId = req.user._id;
 

@@ -25,10 +25,6 @@ import { isValidWaterId } from '../middlewares/IsValidWaterId.js';
 const waterRouter = Router();
 waterRouter.use(authenticate);
 
-waterRouter.get('/test', (req, res) => {
-  res.json({ message: 'Water route is working' });
-});
-
 waterRouter.post(
   '/',
   validateBody(addWaterVolumeSchema),

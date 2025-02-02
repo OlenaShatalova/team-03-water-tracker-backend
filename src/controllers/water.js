@@ -27,7 +27,8 @@ export const updateWaterRateController = async (req, res, next) => {
     }
 
     res.status(200).json({
-      status: 'success',
+      status: 200,
+      message: 'Successfully update water volume!',
       data: {
         dailyNorm: updatedUser.dailyNorm,
       },
@@ -50,7 +51,7 @@ export const monthWaterController = async (req, res, next) => {
     );
 
     res.json({
-      status: 'success',
+      status: 200,
       data: monthStats,
     });
   } catch (error) {

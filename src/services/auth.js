@@ -84,8 +84,8 @@ export const logout = async (sessionId) => {
 
 export const getSession = (filter) => SessionCollection.findOne(filter);
 
-
 export const getUser = (filter) => UserCollection.findOne(filter);
+
 export const updateUserService = (filter, updateData) =>
   UserCollection.findOneAndUpdate(
     filter,

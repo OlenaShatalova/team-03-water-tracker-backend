@@ -1,5 +1,7 @@
-// import * as waterService from '../services/water.js';
 import { todayWater, getMonthStatistics } from '../services/water.js';
+
+import createHttpError from 'http-errors';
+import { updateUserService } from '../services/auth.js';
 
 export const todayWaterController = async (req, res) => {
   const userId = req.user._id;
@@ -10,6 +12,30 @@ export const todayWaterController = async (req, res) => {
     data, //data.todayRecord - повертає список всіх записів споживання води користувачем за поточний день.
     //data.percentTodayWater - повертає кількість спожитої води від денної норми користувача у процентах.
   });
+};
+
+export const updateWaterRateController = async (req, res, next) => {
+  try {
+    const { _id } = req.user; // Отримуємо ID користувача з req.user
+    const { dailyNorm } = req.body; // Отримуємо dailyNorm з тіла запиту
+
+    // Оновлюємо dailyNorm у базі даних
+    const updatedUser = await updateUserService({ _id }, { dailyNorm });
+
+    if (!updatedUser) {
+      throw createHttpError(404, 'User not found');
+    }
+
+    res.status(200).json({
+      status: 200,
+      message: 'Successfully update water volume!',
+      data: {
+        dailyNorm: updatedUser.dailyNorm,
+      },
+    });
+  } catch (error) {
+    next(error);
+  }
 };
 
 export const monthWaterController = async (req, res, next) => {
@@ -25,7 +51,7 @@ export const monthWaterController = async (req, res, next) => {
     );
 
     res.json({
-      status: 'success',
+      status: 200,
       data: monthStats,
     });
   } catch (error) {

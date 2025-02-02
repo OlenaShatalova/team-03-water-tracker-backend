@@ -3,6 +3,41 @@ import { WaterCollection } from '../db/models/Water.js';
 
 import NodeCache from 'node-cache';
 
+export const addWaterVolume = async (payload, userId) => {
+  const water = { ...payload, userId };
+  return await WaterCollection.create(water);
+};
+
+export const updateWaterVolume = async (
+  waterId,
+  payload,
+  userId,
+  options = {},
+) => {
+  const result = await WaterCollection.findOneAndUpdate(
+    { _id: waterId, userId },
+    payload,
+    {
+      new: true,
+      includeResultMetadata: true,
+      ...options,
+    },
+  );
+
+  if (!result || !result.value) return null;
+  return {
+    water: result.value,
+    isNew: Boolean(result?.lastErrorObject?.upserted),
+  };
+};
+
+export const deleteWaterVolume = async (waterId) => {
+  const water = await WaterCollection.findOneAndDelete({
+    _id: waterId,
+  });
+  return water;
+};
+
 const cache = new NodeCache({ stdTTL: 60 * 60 });
 
 export const todayWater = async ({ userId }) => {

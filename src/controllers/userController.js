@@ -1,11 +1,12 @@
 import createHttpError from 'http-errors';
-import { updateUserService } from '../services/auth.js';
+import { getUser, updateUserService } from '../services/auth.js';
 import { saveFileToUploadsDir } from '../utils/saveFileToUploadsDir.js';
 import { CLOUDINARY } from '../constants/index.js';
 import { env } from '../utils/env.js';
 import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
 import cloudinary from 'cloudinary';
 import { UserCollection } from '../db/models/User.js';
+import bcrypt from 'bcrypt';
 
 export const getCurrentUser = async (req, res) => {
   const currentUser = req.user;
@@ -25,17 +26,35 @@ export const getCurrentUser = async (req, res) => {
 
 export const updateCurrentUser = async (req, res) => {
   const { _id } = req.user;
-  const updateData = { ...req.body };
+  const { oldPassword, newPassword, updateData = {} } = req.body;
 
-  const result = await updateUserService({ _id }, updateData);
-
-  if (!result) {
+  // getting user
+  const user = await getUser({ _id });
+  if (!user) {
     throw createHttpError(404, 'User not found');
   }
 
+  // check password and update
+  if (oldPassword && newPassword) {
+    const isMatchPassword = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatchPassword) {
+      throw createHttpError(401, 'Incorrect old password');
+    }
+
+    const hashPassword = await bcrypt.hash(newPassword, 10);
+    updateData.password = hashPassword;
+  }
+
+  // update pwd
+  const result = await updateUserService({ _id }, updateData);
+  if (!result) {
+    throw createHttpError(500, 'Failed to update user');
+  }
+
+
   res.status(200).json({
     status: 200,
-    message: 'Successfully updated a user!',
+    message: 'User updated successfully!',
     data: result,
   });
 };

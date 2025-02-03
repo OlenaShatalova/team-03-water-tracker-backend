@@ -27,8 +27,6 @@ export const getCurrentUser = async (req, res) => {
 export const updateCurrentUser = async (req, res) => {
   const { _id } = req.user;
   const { oldPassword, newPassword, ...updateData } = req.body;
-  console.log(req.body);
-  console.log(updateData);
 
   // getting user
   const user = await getUser({ _id });

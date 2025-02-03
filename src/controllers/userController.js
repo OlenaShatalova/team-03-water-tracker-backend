@@ -18,19 +18,17 @@ export const getCurrentUser = async (req, res) => {
   }
 
   res.status(200).json({
-    email: currentUser.email,
-    gender: currentUser.gender,
-    dailyNorm: currentUser.dailyNorm,
-    avatarUrl: currentUser.avatarUrl,
-    name: currentUser.name,
+    status: 200,
+    message: 'User data retrieved successfully',
+    data: currentUser,
   });
 };
 
 export const updateCurrentUser = async (req, res) => {
   const { _id } = req.user;
-  const { oldPassword, newPassword, updateData = {} } = req.body;
-  // console.log(req.body);
-  // console.log(updateData);
+  const { oldPassword, newPassword, ...updateData } = req.body;
+  console.log(req.body);
+  console.log(updateData);
 
   // getting user
   const user = await getUser({ _id });
@@ -50,7 +48,7 @@ export const updateCurrentUser = async (req, res) => {
   }
 
   // update pwd
-  const result = await updateUserService({ _id }, updateData);
+  const result = await updateUserService({ _id }, { ...updateData });
   if (!result) {
     throw createHttpError(500, 'Failed to update user'); //// передивитися варіанти помилок
   }

@@ -1,12 +1,14 @@
 import createHttpError from 'http-errors';
-import { getUser, updateUserService } from '../services/auth.js';
-import { saveFileToUploadsDir } from '../utils/saveFileToUploadsDir.js';
-import { CLOUDINARY } from '../constants/index.js';
-import { env } from '../utils/env.js';
-import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
-import cloudinary from 'cloudinary';
-import { UserCollection } from '../db/models/User.js';
 import bcrypt from 'bcrypt';
+import cloudinary from 'cloudinary';
+
+import { UserCollection } from '../db/models/User.js';
+import { getUser, updateUserService } from '../services/auth.js';
+
+import { saveFileToUploadsDir } from '../utils/saveFileToUploadsDir.js';
+import { saveFileToCloudinary } from '../utils/saveFileToCloudinary.js';
+import { env } from '../utils/env.js';
+import { CLOUDINARY } from '../constants/index.js';
 
 export const getCurrentUser = async (req, res) => {
   const currentUser = req.user;
@@ -27,12 +29,14 @@ export const getCurrentUser = async (req, res) => {
 export const updateCurrentUser = async (req, res) => {
   const { _id } = req.user;
   const { oldPassword, newPassword, updateData = {} } = req.body;
+  // console.log(req.body);
+  // console.log(updateData);
 
   // getting user
   const user = await getUser({ _id });
   if (!user) {
     throw createHttpError(404, 'User not found');
-  }
+  } /// чи потрібен запит до бази, якщо user є в req.user
 
   // check password and update
   if (oldPassword && newPassword) {
@@ -48,9 +52,8 @@ export const updateCurrentUser = async (req, res) => {
   // update pwd
   const result = await updateUserService({ _id }, updateData);
   if (!result) {
-    throw createHttpError(500, 'Failed to update user');
+    throw createHttpError(500, 'Failed to update user'); //// передивитися варіанти помилок
   }
-
 
   res.status(200).json({
     status: 200,

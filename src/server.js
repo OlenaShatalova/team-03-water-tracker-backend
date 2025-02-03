@@ -6,12 +6,11 @@ import { logger } from './middlewares/logger.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { swaggerDocs } from './middlewares/swaggerDocs.js';
+import { env } from './utils/env.js';
 
 import authRouter from './routers/auth.js';
 import waterRouter from './routers/water.js';
-
-import { env } from './utils/env.js';
-import { userRouter } from './routers/userRoute.js';
+import userRouter from './routers/user.js';
 
 export const startServer = () => {
   const app = express();

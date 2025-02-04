@@ -34,6 +34,14 @@ export const updateCurrentUser = async (req, res) => {
     throw createHttpError(404, 'User not found');
   } /// чи потрібен запит до бази, якщо user є в req.user
 
+
+  if (!oldPassword && newPassword) {
+    throw createHttpError(
+      400,
+      'Old password is required to set a new password',
+    );
+  }
+  
   // check password and update
   if (oldPassword && newPassword) {
     const isMatchPassword = await bcrypt.compare(oldPassword, user.password);

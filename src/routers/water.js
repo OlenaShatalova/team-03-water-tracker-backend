@@ -20,7 +20,6 @@ import {
 } from '../validation/water.js';
 import { authenticate } from '../middlewares/authenticate.js';
 import { isValidId } from '../middlewares/isValidId.js';
-import { isValidWaterId } from '../middlewares/IsValidWaterId.js';
 
 const waterRouter = Router();
 
@@ -34,7 +33,7 @@ waterRouter.post(
 
 waterRouter.patch(
   '/:waterId',
-  isValidWaterId,
+  isValidId,
   validateBody(updateWaterVolumeSchema),
   ctrlWrapper(patchWaterVolumeController),
 );

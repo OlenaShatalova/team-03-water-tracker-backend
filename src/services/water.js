@@ -98,8 +98,8 @@ export const todayWater = async ({ userId }) => {
 };
 
 export const getMonthStatistics = async (userId, month, year) => {
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0);
+  const startDate = new Date(Date.UTC(year, month - 1, 1));
+  const endDate = new Date(Date.UTC(year, month, 0));
 
   const startDateStr = startDate.toISOString().split('T')[0];
   const endDateStr = endDate.toISOString().split('T')[0];
@@ -117,14 +117,16 @@ export const getMonthStatistics = async (userId, month, year) => {
   const daysInMonth = endDate.getDate();
 
   return Array.from({ length: daysInMonth }, (_, index) => {
-    const currentDate = new Date(year, month - 1, index + 1);
+    const currentDate = new Date(Date.UTC(year, month - 1, index + 1));
     const dateStr = currentDate.toISOString().split('T')[0];
 
     const dayRecords = waterRecords.filter((record) => record.date === dateStr);
+
     const totalWater = dayRecords.reduce(
       (sum, record) => sum + record.waterVolume,
       0,
     );
+
     const dailyNorm =
       dayRecords[0]?.dailyNorm || waterRecords[0]?.userId.dailyNorm || 1500;
 

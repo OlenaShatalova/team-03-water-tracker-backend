@@ -1,0 +1,16 @@
+type: object
+required:
+  - email
+  - password
+properties:
+  email:
+    type: string
+    format: email
+    example: david@gmail.com
+  password:
+    type: string
+    format: password
+    example: '1234567q'
+  name:
+    type: string
+    description: Optional user name 'David Soul'

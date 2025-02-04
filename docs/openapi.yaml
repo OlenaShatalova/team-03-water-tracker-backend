@@ -7,14 +7,28 @@ info:
     url: http://www.apache.org/licenses/LICENSE-2.0.html
   description: This is the documentation for Water Tracker API. Water Tracker is a web application that helps users monitor their daily water intake, set personal goals, and review statistics. The main goal of the application is to improve users' water balance by providing a convenient tool for tracking and analyzing their habits.
 tags:
+  - name: Authentication
+    description: Authorization endpoints
   - name: Users
-    description: Endpoints for user authentication and changing user information.
+    description: Endpoints for changing user information.
   - name: Water
     description: Endpoints for water quantity managment and statistics.
 servers:
   - url: http://localhost:3000
-  - url: https://example.com/api/v1
+  - url: https://watertracker-app-if0o.onrender.com
 paths:
+  /auth/register:
+    post: 
+      $ref: '../swagger/paths/auth/registerPost.yaml'
+  /auth/login:
+    post: 
+      $ref: '../swagger/paths/auth/loginPost.yaml'
+  /auth/refresh:
+    post: 
+      $ref: '../swagger/paths/auth/refreshPost.yaml'
+  /auth/logout:
+    post: 
+      $ref: '../swagger/paths/auth/logoutPost.yaml'
   /water/month:
     get:
       $ref: '../swagger/paths/water/month/get.yaml'

@@ -43,6 +43,7 @@ export const updateWaterVolume = async (
 
 export const deleteWaterVolume = async (waterId) => {
   const today = new Date().toISOString().split('T')[0];
+
   const water = await WaterCollection.findOneAndDelete({
     _id: waterId,
   });
@@ -59,6 +60,15 @@ const cache = new NodeCache({ stdTTL: 60 * 60 });
 
 export const todayWater = async ({ userId }) => {
   const today = new Date().toISOString().split('T')[0];
+
+  const now = new Date();
+  const todayStart = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+  ).toISOString();
+  const todayEnd = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
+  ).toISOString();
+
   const cacheKey = `todayWater-${userId}-${today}`;
   const cachedData = cache.get(cacheKey);
 
@@ -66,8 +76,10 @@ export const todayWater = async ({ userId }) => {
     return cachedData;
   }
 
-  const todayRecord = await WaterCollection.find({ userId, date: today });
-  // console.log(today);
+  const todayRecord = await WaterCollection.find({
+    userId,
+    date: { $gte: todayStart, $lte: todayEnd },
+  });
 
   const user = await UserCollection.findById(userId);
   const getDailyNorm = user.dailyNorm;

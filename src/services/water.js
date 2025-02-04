@@ -5,6 +5,12 @@ import NodeCache from 'node-cache';
 
 export const addWaterVolume = async (payload, userId) => {
   const water = { ...payload, userId };
+  const today = new Date().toISOString().split('T')[0];
+
+  const cacheKey = `todayWater-${userId}-${today}`;
+
+  cache.del(cacheKey);
+
   return await WaterCollection.create(water);
 };
 
@@ -14,6 +20,7 @@ export const updateWaterVolume = async (
   userId,
   options = {},
 ) => {
+  const today = new Date().toISOString().split('T')[0];
   const result = await WaterCollection.findOneAndUpdate(
     { _id: waterId, userId },
     payload,
@@ -23,6 +30,8 @@ export const updateWaterVolume = async (
       ...options,
     },
   );
+  const cacheKey = `todayWater-${userId}-${today}`;
+  cache.del(cacheKey);
 
   if (!result || !result.value) return null;
   return {
@@ -32,9 +41,16 @@ export const updateWaterVolume = async (
 };
 
 export const deleteWaterVolume = async (waterId) => {
+  const today = new Date().toISOString().split('T')[0];
   const water = await WaterCollection.findOneAndDelete({
     _id: waterId,
   });
+
+  if (water) {
+    const cacheKey = `todayWater-${water.userId}-${today}`;
+    cache.del(cacheKey);
+  }
+
   return water;
 };
 
@@ -42,7 +58,6 @@ const cache = new NodeCache({ stdTTL: 60 * 60 });
 
 export const todayWater = async ({ userId }) => {
   const today = new Date().toISOString().split('T')[0];
-
   const cacheKey = `todayWater-${userId}-${today}`;
   const cachedData = cache.get(cacheKey);
 

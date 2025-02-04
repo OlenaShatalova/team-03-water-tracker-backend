@@ -34,6 +34,7 @@ export const updateWaterVolume = async (
   cache.del(cacheKey);
 
   if (!result || !result.value) return null;
+
   return {
     water: result.value,
     isNew: Boolean(result?.lastErrorObject?.upserted),
@@ -66,6 +67,8 @@ export const todayWater = async ({ userId }) => {
   }
 
   const todayRecord = await WaterCollection.find({ userId, date: today });
+  // console.log(today);
+
   const user = await UserCollection.findById(userId);
   const getDailyNorm = user.dailyNorm;
   const totalTodayWater = todayRecord.reduce(

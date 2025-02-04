@@ -23,6 +23,7 @@ import { isValidId } from '../middlewares/isValidId.js';
 import { isValidWaterId } from '../middlewares/IsValidWaterId.js';
 
 const waterRouter = Router();
+
 waterRouter.use(authenticate);
 
 waterRouter.post(
@@ -44,14 +45,12 @@ waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
 
 waterRouter.patch(
   '/water-rate',
-  authenticate, // Перевірка авторизації
   validateBody(updateWaterRateSchema), // Валідація тіла запиту
   ctrlWrapper(updateWaterRateController), // Контролер
 );
 
 waterRouter.get(
   '/month',
-  authenticate,
   validateQuery(getMonthWaterSchema),
   ctrlWrapper(monthWaterController),
 );

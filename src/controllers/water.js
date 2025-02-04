@@ -44,7 +44,7 @@ export const deleteWaterController = async (req, res, next) => {
 
   const { waterId } = req.params;
 
-  const water = deleteWaterVolume(waterId, userId);
+  const water = await deleteWaterVolume(waterId, userId);
 
   if (!water) {
     next(createHttpError(404, 'Water volume not found!'));
@@ -57,6 +57,7 @@ export const deleteWaterController = async (req, res, next) => {
 export const todayWaterController = async (req, res) => {
   const userId = req.user._id;
   const data = await todayWater({ userId });
+
   res.status(201).json({
     status: 201,
     message: 'Successfully get user data!',

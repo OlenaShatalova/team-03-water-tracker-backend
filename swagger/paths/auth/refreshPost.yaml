@@ -1,0 +1,45 @@
+#/swagger/paths/auth/refreshPost.yaml
+
+tags:
+  - Authentication
+summary: Refresh the session
+operationId: refreshSession
+description: 'Refresh the session'
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/auth/refresh.yaml
+responses:
+  '200':
+    description: Successfully refreshed the session
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully refreshed the session!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: 'lkjhgtt467tgjjkK86yhGhjkmJK890plkbvghu890plkJHGhjkl'
+  '400':
+    $ref: ../../components/responses/400.yaml
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: ../../components/responses/500.yaml

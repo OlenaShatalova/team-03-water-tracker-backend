@@ -1,0 +1,45 @@
+#/swagger/paths/auth/loginPost.yaml
+
+tags:
+  - Authentication
+summary: Login a user
+operationId: loginUser
+description: 'Login a user with email and password'
+security:
+  - bearerAuth: []
+requestBody:
+  required: true
+  content:
+    application/json:
+      schema:
+        $ref: ../../components/schemas/auth/login.yaml
+responses:
+  '200':
+    description: User logged in successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          required:
+            - status
+            - message
+            - data
+          properties:
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: Successfully logged in a user!
+            data:
+              type: object
+              properties:
+                accessToken:
+                  type: string
+                  example: 'sdfghjDfhj76rgnmkDFGkmnbvFhmNlnb9ijnbc'
+  '400':
+    $ref: '../../components/responses/400.yaml'
+  '401':
+    $ref: '../../components/responses/401.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

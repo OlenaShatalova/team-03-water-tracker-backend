@@ -15,7 +15,7 @@ import userRouter from './routers/user.js';
 export const startServer = () => {
   const app = express();
 
-  app.use(cors());
+  app.use(cors({ origin: true, credentials: true }));
   app.use(express.json());
   app.use(cookieParser());
   app.use(express.static('uploads'));

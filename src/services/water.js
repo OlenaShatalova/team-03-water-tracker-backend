@@ -62,12 +62,22 @@ export const todayWater = async ({ userId }) => {
   const today = new Date().toISOString().split('T')[0];
 
   const now = new Date();
-  const todayStart = new Date(
-    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
-  ).toISOString();
-  const todayEnd = new Date(
-    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
-  ).toISOString();
+  // Получаем смещение часового пояса в минутах
+  const timezoneOffset = now.getTimezoneOffset();
+
+  // Вычисляем начало дня с учетом часового пояса
+  const todayStart = new Date(now);
+  todayStart.setMinutes(todayStart.getMinutes() - timezoneOffset); // Корректировка по времени
+
+  // Устанавливаем время на 00:00:00
+  todayStart.setHours(0, 0, 0, 0);
+
+  // Вычисляем конец дня с учетом часового пояса
+  const todayEnd = new Date(now);
+  todayEnd.setMinutes(todayEnd.getMinutes() - timezoneOffset); // Корректировка по времени
+
+  // Устанавливаем время на 23:59:59.999
+  todayEnd.setHours(23, 59, 59, 999);
 
   const cacheKey = `todayWater-${userId}-${today}`;
   const cachedData = cache.get(cacheKey);

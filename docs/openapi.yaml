@@ -29,6 +29,14 @@ paths:
   /auth/logout:
     post: 
       $ref: '../swagger/paths/auth/logoutPost.yaml'
+  /user:
+    get:
+      $ref: '../swagger/paths/user/userGet.yaml'
+    patch:
+      $ref: '../swagger/paths/user/userPatch.yaml'
+  /user/avatar:
+    patch:
+      $ref: '../swagger/paths/user/userAvatarPatch.yaml'
   /water/month:
     get:
       $ref: '../swagger/paths/water/month/get.yaml'

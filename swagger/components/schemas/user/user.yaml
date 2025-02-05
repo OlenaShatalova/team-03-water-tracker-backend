@@ -1,0 +1,24 @@
+type: object
+properties:
+  name:
+    description: "User's name"
+    type: string
+    example: 'David Soul'
+  email:
+    description: "User's email"
+    type: string
+    example: 'david@gmail.com'
+  dailyNorm:
+    description: "User's daily norm"
+    type: number
+    example: '100'
+  gender:
+    description: "User's gender"
+    type: string
+    enum: ['female', 'male']
+    default: 'female'
+  avatarURL:
+    description: "Link to user's avatar"
+    type: string
+    format: binary
+    example: https://res.cloudinary.com/uqwgdu/image/upload/image.png

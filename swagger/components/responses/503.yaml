@@ -1,0 +1,15 @@
+description: 'Problem with external server Cloudinary'
+content:
+  application/json:
+    schema:
+      type: object
+      required:
+        - status
+        - message
+      properties:
+        status:
+          type: integer
+          example: 500
+        message:
+          type: string
+          example: 'Problem with external server Cloudinary'

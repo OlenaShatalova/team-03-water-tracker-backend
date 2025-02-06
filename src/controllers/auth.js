@@ -4,11 +4,22 @@ const setupSession = (res, session) => {
   res.cookie('refreshToken', session.refreshToken, {
     httpOnly: true,
     expires: session.refreshTokenValidUntil,
+    sameSite: 'None',
+    secure: true,
+    
   });
 
   res.cookie('sessionId', session.id, {
     httpOnly: true,
     expires: session.refreshTokenValidUntil,
+    sameSite: 'None',
+    secure: true,
+  });
+  res.cookie('accessToken', session.accessToken, {
+    httpOnly: true,
+    expires: session.accessTokenValidUntil,
+    sameSite: 'None',
+    secure: true,
   });
 };
 
@@ -26,7 +37,7 @@ export const loginController = async (req, res) => {
   const session = await authServices.login(req.body);
 
   setupSession(res, session);
-
+console.log('Set-Cookie:', res.getHeaders()['set-cookie']);
   res.json({
     status: 200,
     message: 'Successfully logged in an user!',

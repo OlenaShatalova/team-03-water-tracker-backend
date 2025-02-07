@@ -61,23 +61,18 @@ const cache = new NodeCache({ stdTTL: 60 * 60 });
 export const todayWater = async ({ userId }) => {
   const today = new Date().toISOString().split('T')[0];
 
-  const now = new Date();
-  // Получаем смещение часового пояса в минутах
-  const timezoneOffset = now.getTimezoneOffset();
+  // const now = new Date();
+  // const timezoneOffset = now.getTimezoneOffset();
 
-  // Вычисляем начало дня с учетом часового пояса
-  const todayStart = new Date(now);
-  todayStart.setMinutes(todayStart.getMinutes() - timezoneOffset); // Корректировка по времени
+  // const todayStart = new Date(now);
+  // todayStart.setMinutes(todayStart.getMinutes() - timezoneOffset); // Корректировка по времени
 
-  // Устанавливаем время на 00:00:00
-  todayStart.setHours(0, 0, 0, 0);
+  // todayStart.setHours(0, 0, 0, 0);
 
-  // Вычисляем конец дня с учетом часового пояса
-  const todayEnd = new Date(now);
-  todayEnd.setMinutes(todayEnd.getMinutes() - timezoneOffset); // Корректировка по времени
+  // const todayEnd = new Date(now);
+  // todayEnd.setMinutes(todayEnd.getMinutes() - timezoneOffset); // Корректировка по времени
 
-  // Устанавливаем время на 23:59:59.999
-  todayEnd.setHours(23, 59, 59, 999);
+  // todayEnd.setHours(23, 59, 59, 999);
 
   const cacheKey = `todayWater-${userId}-${today}`;
   const cachedData = cache.get(cacheKey);
@@ -88,7 +83,8 @@ export const todayWater = async ({ userId }) => {
 
   const todayRecord = await WaterCollection.find({
     userId,
-    date: { $gte: todayStart, $lte: todayEnd },
+    date: today,
+    // { $gte: todayStart, $lte: todayEnd },
   });
 
   const user = await UserCollection.findById(userId);

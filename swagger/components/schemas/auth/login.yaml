@@ -10,4 +10,4 @@ properties:
   password:
     type: string
     format: password
-    example: 1234567q
+    example: '1234567q'

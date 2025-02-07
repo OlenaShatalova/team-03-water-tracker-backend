@@ -15,7 +15,7 @@ tags:
     description: Endpoints for water quantity managment and statistics.
 servers:
   - url: http://localhost:3000
-  - url: https://watertracker-app-if0o.onrender.com
+  - url: https://watertracker-app-if0o.onrender.com/api
 paths:
   /auth/register:
     post: 

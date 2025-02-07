@@ -43,7 +43,7 @@ waterRouter.delete('/:waterId', isValidId, ctrlWrapper(deleteWaterController));
 waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
 
 waterRouter.patch(
-  '/water-rate',
+  '/water-rate/:waterId',
   validateBody(updateWaterRateSchema), // Валідація тіла запиту
   ctrlWrapper(updateWaterRateController), // Контролер
 );

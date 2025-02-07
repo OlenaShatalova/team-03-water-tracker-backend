@@ -17,6 +17,14 @@ const createSessionData = () => ({
   refreshTokenValidUntil: Date.now() + REFRESH_TOKEN_LIFETIME,
 });
 
+const createUserData = (user) => ({
+  name: user.name ?? null,
+  email: user.email ?? null,
+  dailyNorm: user.dailyNorm ?? null,
+  gender: user.gender ?? null,
+  avatar: user.avatar ?? null,
+});
+
 export const register = async (payload) => {
   const { email, password } = payload;
   const user = await UserCollection.findOne({ email });
@@ -38,13 +46,16 @@ export const register = async (payload) => {
   });
 
   return {
-    user: newUser,
+    user: createUserData(newUser),
     accessToken: sessionData.accessToken,
   };
 };
 
 export const login = async ({ email, password }) => {
-  const user = await UserCollection.findOne({ email });
+  // const user = await UserCollection.findOne({ email });
+  const user = await UserCollection.findOne({ email }).select(
+    'name email dailyNorm gender avatar password',
+  );
   if (!user) {
     throw createHttpError(401, 'Email or password invalid');
   }
@@ -57,13 +68,13 @@ export const login = async ({ email, password }) => {
   await SessionCollection.deleteOne({ userId: user._id });
 
   const sessionData = createSessionData();
-  const newSession = await SessionCollection.create({
+  await SessionCollection.create({
     userId: user._id,
     ...sessionData,
   });
 
   return {
-    user,
+    userData: createUserData(user),
     accessToken: sessionData.accessToken,
   };
 };

@@ -11,7 +11,7 @@ import {
 } from '../controllers/water.js';
 
 import { validateBody } from '../middlewares/validateBody.js';
-// import { validateQuery } from '../utils/validateQuery.js';
+import { validateQuery } from '../utils/validateQuery.js';
 import {
   getMonthWaterSchema,
   updateWaterRateSchema,
@@ -50,7 +50,7 @@ waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
 
 waterRouter.get(
   '/month',
-  validateBody(getMonthWaterSchema), //тут зробив validateBody замість validateQuery
+  validateQuery(getMonthWaterSchema), //тут повернув validateQuery замість validateBody
   ctrlWrapper(monthWaterController),
 );
 

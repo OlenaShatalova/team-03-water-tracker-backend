@@ -92,7 +92,7 @@ export const updateWaterRateController = async (req, res, next) => {
 
 export const monthWaterController = async (req, res, next) => {
   // try {
-  const { month, year } = req.body; //body замість query, і try catch видалене
+  const { month, year } = req.query; //query замість body, і try catch видалене
 
   const userId = req.user._id;
 

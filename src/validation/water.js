@@ -7,11 +7,13 @@ export const addWaterVolumeSchema = Joi.object({
     'number.max': 'Amount should be at most 5000 ml',
     'any.required': 'Amount is required',
   }),
-  date: Joi.date().iso().required().messages({
-    'date.base': 'Date should be correct',
-    'date.format':
-      'Date should be at ISO 8601 format (example, 2025-01-30T14:00:00Z)',
-    'any.required': 'Amount is required',
+  date: Joi.string().isoDate().required().messages({
+    'date.base': 'Date should be string',
+    // 'date.format':
+    // 'Date should be at ISO 8601 format (example, 2025-01-30T14:00:00Z)',
+    'string.isoDate':
+      'Date should be in ISO format (e.g., 2025-02-08T13:00:22.123Z)',
+    'any.required': 'Date is required',
   }),
 });
 
@@ -22,10 +24,12 @@ export const updateWaterVolumeSchema = Joi.object({
     'number.max': 'Amount should be at most 5000 ml',
     'any.required': 'Amount is required',
   }),
-  date: Joi.date().iso().required().messages({
+  date: Joi.string().isoDate().required().messages({
     'date.base': 'Date should be correct',
-    'date.format':
-      'Date should be at ISO 8601 format (example, 2025-01-30T14:00:00Z)',
+    // 'date.format':
+    //   'Date should be at ISO 8601 format (example, 2025-01-30T14:00:00Z)',
+    'string.isoDate':
+      'Date should be in ISO format (e.g., 2025-02-08T13:00:22.123Z)',
     'any.required': 'Amount is required',
   }),
 });

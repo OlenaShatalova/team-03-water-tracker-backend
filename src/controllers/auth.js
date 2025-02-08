@@ -1,3 +1,4 @@
+// import createHttpError from 'http-errors';
 import * as authServices from '../services/auth.js';
 
 const setupSession = (res, session) => {
@@ -29,6 +30,13 @@ export const loginController = async (req, res) => {
   const session = await authServices.login(req.body);
 
   setupSession(res, session);
+
+  // Додав логування для перевірки
+  console.log('Session after login:', session);
+  console.log('Cookies being set:', {
+    refreshToken: session.refreshToken,
+    sessionId: session.id,
+  });
 
   res.json({
     status: 200,

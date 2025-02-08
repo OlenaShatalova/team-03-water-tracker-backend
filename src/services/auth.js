@@ -52,9 +52,9 @@ export const register = async (payload) => {
 };
 
 export const login = async ({ email, password }) => {
-  // const user = await UserCollection.findOne({ email });
   const user = await UserCollection.findOne({ email });
-  console.log(user);
+  // const user = await UserCollection.findOne({ email });
+  // console.log(user);
 
   if (!user) {
     throw createHttpError(401, 'Email or password invalid');
@@ -68,7 +68,8 @@ export const login = async ({ email, password }) => {
   await SessionCollection.deleteOne({ userId: user._id });
 
   const sessionData = createSessionData();
-  await SessionCollection.create({
+  //const session
+  const session = await SessionCollection.create({
     userId: user._id,
     ...sessionData,
   });
@@ -76,6 +77,9 @@ export const login = async ({ email, password }) => {
   return {
     userData: createUserData(user),
     accessToken: sessionData.accessToken,
+    refreshToken: sessionData.refreshToken,
+    id: session._id, // Додаємо ID сесії
+    refreshTokenValidUntil: session.refreshTokenValidUntil,
   };
 };
 

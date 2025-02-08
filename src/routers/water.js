@@ -50,7 +50,7 @@ waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
 
 waterRouter.get(
   '/month',
-  validateQuery(getMonthWaterSchema),
+  validateQuery(getMonthWaterSchema), //тут повернув validateQuery замість validateBody
   ctrlWrapper(monthWaterController),
 );
 

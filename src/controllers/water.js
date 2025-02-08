@@ -91,22 +91,22 @@ export const updateWaterRateController = async (req, res, next) => {
 };
 
 export const monthWaterController = async (req, res, next) => {
-  try {
-    const { month, year } = req.query;
+  // try {
+  const { month, year } = req.query; //query замість body, і try catch видалене
 
-    const userId = req.user._id;
+  const userId = req.user._id;
 
-    const monthStats = await getMonthStatistics(
-      userId,
-      Number(month),
-      Number(year),
-    );
+  const monthStats = await getMonthStatistics(
+    userId,
+    Number(month),
+    Number(year),
+  );
 
-    res.json({
-      status: 200,
-      data: monthStats,
-    });
-  } catch (error) {
-    next(error);
-  }
+  res.json({
+    status: 200,
+    data: monthStats,
+  });
+  // } catch (error) {
+  //   next(error);
+  // }
 };

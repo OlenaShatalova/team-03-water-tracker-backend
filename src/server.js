@@ -15,15 +15,7 @@ import userRouter from './routers/user.js';
 export const startServer = () => {
   const app = express();
 
-  app.use(
-    cors({
-      origin: [
-        'https://team-03-water-tracker-frontend.vercel.app',
-        'http://localhost:5173',
-      ],
-      credentials: true,
-    }),
-  );
+  app.use(cors());
   app.use(express.json());
   app.use(cookieParser());
   app.use(express.static('uploads'));

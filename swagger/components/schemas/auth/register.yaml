@@ -7,10 +7,10 @@ properties:
     type: string
     format: email
     example: david@gmail.com
+    pattern:  '/^\w+([._]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/'
   password:
     type: string
     format: password
     example: '1234567q'
-  name:
-    type: string
-    description: Optional user name 'David Soul'
+    minLength: 8
+    maxLength: 64

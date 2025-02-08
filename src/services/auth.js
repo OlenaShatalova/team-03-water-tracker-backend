@@ -53,9 +53,9 @@ export const register = async (payload) => {
 
 export const login = async ({ email, password }) => {
   // const user = await UserCollection.findOne({ email });
-  const user = await UserCollection.findOne({ email }).select(
-    'name email dailyNorm gender avatar password',
-  );
+  const user = await UserCollection.findOne({ email });
+  console.log(user);
+
   if (!user) {
     throw createHttpError(401, 'Email or password invalid');
   }

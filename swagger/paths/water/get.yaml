@@ -1,0 +1,23 @@
+tags:
+  - Water
+summary: Get user's daily rate of water
+operationId: getDailyRateOfWater
+description: Returns the daily rate of water for the logged-in user.
+security:
+  - bearerAuth: []
+responses:
+  '200':
+    description: The daily rate of water has been successfully obtained
+    content:
+      application/json:
+        schema:
+          type: number
+          properties:
+            dailyWaterNorm:
+              description: The daily water intake goal in milliliters
+  '401':
+    $ref: ../../components/responses/401.yaml
+  '404':
+    $ref: '../../components/responses/404.yaml'
+  '500':
+    $ref: '../../components/responses/500.yaml'

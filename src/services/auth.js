@@ -10,6 +10,9 @@ import {
   REFRESH_TOKEN_LIFETIME,
 } from '../constants/user.js';
 
+import nodemailer from 'nodemailer';
+import { env } from '../utils/env.js';
+
 const createSessionData = () => ({
   accessToken: randomBytes(30).toString('base64'),
   refreshToken: randomBytes(30).toString('base64'),
@@ -123,3 +126,39 @@ export const updateUserService = (filter, updateData) =>
       runValidators: true,
     },
   );
+
+export const forgotPassword = async (email) => {
+  const user = await UserCollection.findOne({ email });
+
+  if (user) {
+    const transporter = nodemailer.createTransport({
+      host: env('SMTP_HOST'),
+      port: env('SMTP_PORT'),
+      secure: true,
+      auth: {
+        user: env('SMTP_USER'),
+        pass: env('SMTP_PASSWORD'),
+      },
+    });
+
+    try {
+      await transporter.sendMail({
+        from: env('SMTP_USER'),
+        to: email,
+        subject: 'Water Tracker - Password Reset',
+        html: `
+            <h1>Password Reset Request</h1>
+            <p>You have requested to reset your password.</p>
+            <p>If you did not make this request, please ignore this email.</p>
+            <p>Instructions for resetting your password will be implemented in the next update.</p>
+          `,
+      });
+    } catch (error) {
+      console.error('Error sending email:', error);
+      // Не прокидаємо помилку користувачу для безпеки
+    }
+  }
+
+  // Завжди повертаємо true для безпеки
+  return true;
+};

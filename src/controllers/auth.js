@@ -73,3 +73,14 @@ export const logoutController = async (req, res) => {
 
   res.status(204).send();
 };
+
+export const forgotPasswordController = async (req, res) => {
+  const { email } = req.body;
+
+  await authServices.forgotPassword(email);
+
+  res.json({
+    status: 200,
+    message: 'Password reset instructions sent'
+  });
+};//контролер для форготпас

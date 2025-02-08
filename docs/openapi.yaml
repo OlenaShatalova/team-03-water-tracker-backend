@@ -18,17 +18,20 @@ servers:
   - url: https://watertracker-app-if0o.onrender.com/api
 paths:
   /auth/register:
-    post: 
+    post:
       $ref: '../swagger/paths/auth/registerPost.yaml'
   /auth/login:
-    post: 
+    post:
       $ref: '../swagger/paths/auth/loginPost.yaml'
   /auth/refresh:
-    post: 
+    post:
       $ref: '../swagger/paths/auth/refreshPost.yaml'
   /auth/logout:
-    post: 
+    post:
       $ref: '../swagger/paths/auth/logoutPost.yaml'
+  /auth/forgot-password:
+    post:
+      $ref: '../swagger/paths/auth/forgotPassword.yaml'
   /user:
     get:
       $ref: '../swagger/paths/user/userGet.yaml'

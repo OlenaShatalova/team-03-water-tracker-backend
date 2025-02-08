@@ -22,3 +22,11 @@ export const updateUserDataSchema = Joi.object({
   oldPassword: Joi.string().min(6).max(64),
   newPassword: Joi.string().min(6).max(64),
 });
+
+export const forgotPasswordSchema = Joi.object({
+  email: Joi.string().pattern(EMAIL_REGEXP).required().messages({
+    'string.pattern.base': 'Email is invalid',
+    'string.empty': 'Email is required',
+    'any.required': 'Email is required',
+  }),
+}); //для форгот пасс додав валідацію

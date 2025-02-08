@@ -262,6 +262,65 @@
         }
       }
     },
+    "/auth/forgot-password": {
+      "post": {
+        "tags": [
+          "Authentication"
+        ],
+        "summary": "Request password reset",
+        "operationId": "forgotPassword",
+        "description": "Send password reset instructions to email",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "email"
+                ],
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "format": "email"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Reset instructions sent",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "example": 200
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Password reset instructions sent"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          }
+        }
+      }
+    },
     "/user": {
       "get": {
         "tags": [
@@ -486,6 +545,7 @@
         "tags": [
           "Water"
         ],
+        "operationId": "getMonthlyWater",
         "summary": "Get water consumption statistics for a month",
         "description": "Endpoint returns detailed water consumption statistics for a specific month. Includes daily breakdown with consumption percentages, daily water norm, and number of water intake records.\n",
         "security": [
@@ -629,12 +689,15 @@
           "email": {
             "type": "string",
             "format": "email",
-            "example": "david@gmail.com"
+            "example": "david@gmail.com",
+            "pattern": "/^\\w+([._]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+$/"
           },
           "password": {
             "type": "string",
             "format": "password",
-            "example": "1234567q"
+            "example": "1234567q",
+            "minLength": 8,
+            "maxLength": 64
           }
         }
       },

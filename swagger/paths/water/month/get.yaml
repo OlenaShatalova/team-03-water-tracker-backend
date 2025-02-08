@@ -1,5 +1,6 @@
 tags:
   - Water
+operationId: getMonthlyWater
 summary: Get water consumption statistics for a month
 description: >
   Endpoint returns detailed water consumption statistics for a specific month.

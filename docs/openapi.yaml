@@ -49,7 +49,7 @@ paths:
   /water/month:
     get:
       $ref: '../swagger/paths/water/month/get.yaml'
-  /water/:waterId:
+  /water/{waterId}:
     patch:
       $ref: '../swagger/paths/water/{waterId}/patch.yaml'
     delete:

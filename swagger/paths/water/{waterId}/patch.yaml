@@ -1,0 +1,40 @@
+tags:
+  - Water
+summary: Update water note
+operationId: updateWaterNote
+description: 'Update water note by id'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 'mnbg78HHMNvfdrtyuimnbg45vbnm'
+requestBody:
+  content:
+    application/json:
+      schema:
+        $ref: '../../../components/schemas/water/addWaterRequest.yaml'
+responses:
+  '200':
+    description: Water note updated successfully
+    content:
+      application/json:
+        schema:
+          type: object
+          properties:
+            data:
+              $ref: '../../../components/schemas/water/addWater.yaml'
+            message:
+              type: string
+              example: 'Water note has been successfully updated!'
+  '400':
+    $ref: '../../../components/responses/400.yaml'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

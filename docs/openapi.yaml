@@ -40,9 +40,23 @@ paths:
   /user/avatar:
     patch:
       $ref: '../swagger/paths/user/userAvatarPatch.yaml'
+  /water:
+    post:
+       $ref: '../swagger/paths/water/post.yaml'
+  /water/water-rate:
+    patch:
+      $ref: '../swagger/paths/water/patch.yaml'
+  /water/today:
+    get:
+      $ref: '../swagger/paths/water/get.yaml'
   /water/month:
     get:
       $ref: '../swagger/paths/water/month/get.yaml'
+  /water/:waterId:
+    patch:
+      $ref: '../swagger/paths/water/{waterId}/patch.yaml'
+    delete:
+      $ref: '../swagger/paths/water/{waterId}/delete.yaml'
 components:
   securitySchemes:
     bearerAuth:

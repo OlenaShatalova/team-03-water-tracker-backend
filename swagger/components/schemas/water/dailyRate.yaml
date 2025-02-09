@@ -1,0 +1,29 @@
+type: object
+properties:
+  dailyNorm:
+    type: string
+    description: User's daily norm of water in liters
+    example: "1.3 L"
+  progress:
+    type: string
+    description: Current progress of water consumption
+    example: "5%"
+  notes:
+    type: array
+    description: List of water consumption
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Id of the note
+          example: 'kjjgft4589ihgfdsdfghjm7yhdhVfgh'
+        date:
+          type: string
+          format: date-time
+          description: Time of noting
+          example: '2024-04-07T08:30:00Z'
+        waterVolume:
+          type: number
+          description: Amount of water consumption
+          example: 150

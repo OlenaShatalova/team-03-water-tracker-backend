@@ -1,0 +1,23 @@
+tags:
+  - Water
+summary: Delete the note about water
+operationId: deleteWaterNote
+description: 'Delete the note about water'
+security:
+  - bearerAuth: []
+parameters:
+  - in: path
+    name: id
+    required: true
+    schema:
+      type: string
+      example: 'kjhgf567ujhFe45fghjFDFghvbn'
+responses:
+  '204':
+    description: 'Successfully deleted a note about water!'
+  '401':
+    $ref: '../../../components/responses/401.yaml'
+  '404':
+    $ref: '../../../components/responses/404.yaml'
+  '500':
+    $ref: '../../../components/responses/500.yaml'

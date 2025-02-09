@@ -1,0 +1,8 @@
+type: object
+required:
+  - dailyNorm
+properties:
+  dailyGoal:
+    description: "User's daily norm of water"
+    type: number
+    example: 85

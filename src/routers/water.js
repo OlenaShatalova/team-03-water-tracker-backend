@@ -33,8 +33,8 @@ waterRouter.post(
 
 waterRouter.patch(
   '/water-rate',
-  validateBody(updateWaterRateSchema), // Валідація тіла запиту
-  ctrlWrapper(updateWaterRateController), // Контролер
+  validateBody(updateWaterRateSchema),
+  ctrlWrapper(updateWaterRateController),
 );
 
 waterRouter.patch(
@@ -46,7 +46,7 @@ waterRouter.patch(
 
 waterRouter.delete('/:waterId', isValidId, ctrlWrapper(deleteWaterController));
 
-waterRouter.get('/water-today', ctrlWrapper(todayWaterController));
+waterRouter.get('/today', ctrlWrapper(todayWaterController));
 
 waterRouter.get(
   '/month',

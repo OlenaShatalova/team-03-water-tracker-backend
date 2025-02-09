@@ -12,16 +12,16 @@ const userRouter = Router();
 
 userRouter.use(authenticate);
 
-userRouter.get('/current', ctrlWrapper(usersController.getCurrentUser));
+userRouter.get('/', ctrlWrapper(usersController.getCurrentUser));
 
 userRouter.patch(
-  '/current/update',
+  '/',
   validateBody(updateUserDataSchema),
   ctrlWrapper(usersController.updateCurrentUser),
 );
 
-userRouter.put(
-  '/current/avatar',
+userRouter.patch(
+  '/avatar',
   upload.single('avatar'),
   ctrlWrapper(usersController.updateUserAvatar),
 );

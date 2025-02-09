@@ -7,14 +7,24 @@ security:
   - bearerAuth: []
 responses:
   '200':
-    description: The daily rate of water has been successfully obtained
+    description: User's daily rate of water
     content:
       application/json:
         schema:
-          type: number
+          type: object
+          required:
+            - status
+            - message
+            - data
           properties:
-            dailyWaterNorm:
-              description: The daily water intake goal in milliliters
+            status:
+              type: integer
+              example: 200
+            message:
+              type: string
+              example: The daily rate of water has been successfully obtained!
+            data:
+              $ref: "../../components/schemas/water/dailyRate.yaml"
   '401':
     $ref: ../../components/responses/401.yaml
   '404':

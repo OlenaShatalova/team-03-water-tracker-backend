@@ -22,7 +22,7 @@ export const startServer = () => {
   app.use(logger);
 
   app.use('/api/auth', authRouter);
-  app.use('/api/users', userRouter);
+  app.use('/api/user', userRouter);
   app.use('/api/water', waterRouter);
   app.use('/api-docs', swaggerDocs());
 

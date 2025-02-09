@@ -29,10 +29,7 @@ paths:
   /auth/logout:
     post:
       $ref: '../swagger/paths/auth/logoutPost.yaml'
-  /auth/forgot-password:
-    post:
-      $ref: '../swagger/paths/auth/forgotPassword.yaml'
-  /user:
+   /user:
     get:
       $ref: '../swagger/paths/user/userGet.yaml'
     patch:

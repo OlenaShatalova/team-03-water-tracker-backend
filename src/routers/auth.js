@@ -9,7 +9,8 @@ import { validateBody } from '../middlewares/validateBody.js';
 import {
   authRegisterSchema,
   authLoginSchema,
-  forgotPasswordSchema,
+  resetPasswordSchema,
+  sendResetEmailSchema,
 } from '../validation/auth.js';
 
 const authRouter = Router();
@@ -31,9 +32,15 @@ authRouter.post('/refresh', ctrlWrapper(authController.refreshTokenController));
 authRouter.post('/logout', ctrlWrapper(authController.logoutController));
 
 authRouter.post(
-  '/forgot-password',
-  validateBody(forgotPasswordSchema),
-  ctrlWrapper(authController.forgotPasswordController),
-); //роут для форготпасс
+  '/send-reset-email',
+  validateBody(sendResetEmailSchema),
+  ctrlWrapper(authController.sendResetEmailController),
+);
+
+authRouter.post(
+  '/reset-pwd',
+  validateBody(resetPasswordSchema),
+  ctrlWrapper(authController.resetPasswordController),
+);
 
 export default authRouter;

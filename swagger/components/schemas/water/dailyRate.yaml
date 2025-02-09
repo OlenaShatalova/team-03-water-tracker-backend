@@ -14,7 +14,7 @@ properties:
     items:
       type: object
       properties:
-        id:
+        _id:
           type: string
           description: Id of the note
           example: 'kjjgft4589ihgfdsdfghjm7yhdhVfgh'

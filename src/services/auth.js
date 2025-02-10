@@ -161,7 +161,7 @@ export const sendResetEmail = async (email) => {
       email,
     },
     env('JWT_SECRET'),
-    { expiresIn: '15m' },
+    { expiresIn: '20m' },
   );
 
   const templatePath = path.join(TEMPLATES_DIR, 'reset-password-email.html');

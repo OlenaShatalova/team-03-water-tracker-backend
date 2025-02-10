@@ -4,17 +4,17 @@ import { WaterCollection } from '../db/models/Water.js';
 import NodeCache from 'node-cache';
 
 export const addWaterVolume = async (payload, userId) => {
-  // const water = { ...payload, date, userId };
-  // const today = new Date().toISOString().split('T')[0];
-  const date = new Date(payload.date).toISOString().split('T')[0];
+  const water = { ...payload, userId };
+  const today = new Date().toISOString().split('T')[0];
+  // const date = new Date(payload.date).toISOString().split('T')[0];
 
-  const water = {
-    ...payload,
-    date, // використовуємо відформатовану дату
-    userId,
-  };
+  // const water = {
+  //   ...payload,
+  //   date, // використовуємо відформатовану дату
+  //   userId,
+  // };
 
-  const cacheKey = `todayWater-${userId}-${date}`;
+  const cacheKey = `todayWater-${userId}-${today}`;
 
   cache.del(cacheKey);
 
@@ -67,6 +67,36 @@ const cache = new NodeCache({ stdTTL: 60 * 60 });
 
 export const todayWater = async ({ userId }) => {
   const today = new Date().toISOString().split('T')[0];
+  const now = new Date();
+
+  const todayStart = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
+  ).toISOString();
+  const todayEnd = new Date(
+    Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
+  ).toISOString();
+
+  const cacheKey = `todayWater-${userId}-${today}`;
+  const cachedData = cache.get(cacheKey);
+  if (cachedData) {
+    return cachedData;
+  }
+  const todayRecord = await WaterCollection.find({
+    userId,
+    date: { $gte: todayStart, $lte: todayEnd },
+  });
+  const user = await UserCollection.findById(userId);
+  const getDailyNorm = user.dailyNorm;
+  const totalTodayWater = todayRecord.reduce(
+    (sum, r) => sum + r.waterVolume,
+    0,
+  );
+  const percentTodayWater = Math.round((totalTodayWater / getDailyNorm) * 100);
+  const result = { todayRecord, percentTodayWater };
+
+  cache.set(cacheKey, result);
+
+  // const today = new Date().toISOString().split('T')[0];
 
   // const now = new Date();
   // const timezoneOffset = now.getTimezoneOffset();
@@ -81,31 +111,31 @@ export const todayWater = async ({ userId }) => {
 
   // todayEnd.setHours(23, 59, 59, 999);
 
-  const cacheKey = `todayWater-${userId}-${today}`;
-  const cachedData = cache.get(cacheKey);
+  // const cacheKey = `todayWater-${userId}-${today}`;
+  // const cachedData = cache.get(cacheKey);
 
-  if (cachedData) {
-    return cachedData;
-  }
+  // if (cachedData) {
+  //   return cachedData;
+  // }
 
-  const todayRecord = await WaterCollection.find({
-    userId,
-    date: today,
-    // { $gte: todayStart, $lte: todayEnd },
-  });
+  // const todayRecord = await WaterCollection.find({
+  //   userId,
+  //   date: today,
+  // { $gte: todayStart, $lte: todayEnd },
+  // });
 
-  const user = await UserCollection.findById(userId);
-  const getDailyNorm = user.dailyNorm;
-  const totalTodayWater = todayRecord.reduce(
-    (sum, r) => sum + r.waterVolume,
-    0,
-  );
+  // const user = await UserCollection.findById(userId);
+  // const getDailyNorm = user.dailyNorm;
+  // const totalTodayWater = todayRecord.reduce(
+  //   (sum, r) => sum + r.waterVolume,
+  //   0,
+  // );
 
-  const percentTodayWater = Math.round((totalTodayWater / getDailyNorm) * 100);
+  // const percentTodayWater = Math.round((totalTodayWater / getDailyNorm) * 100);
 
-  const result = { todayRecord, percentTodayWater };
+  // const result = { todayRecord, percentTodayWater };
 
-  cache.set(cacheKey, result);
+  // cache.set(cacheKey, result);
 
   return result;
 };

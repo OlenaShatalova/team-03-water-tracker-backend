@@ -4,17 +4,17 @@ import { WaterCollection } from '../db/models/Water.js';
 import NodeCache from 'node-cache';
 
 export const addWaterVolume = async (payload, userId) => {
-  // const water = { ...payload, date, userId };
-  // const today = new Date().toISOString().split('T')[0];
-  const date = new Date(payload.date).toISOString().split('T')[0];
+  const water = { ...payload, userId };
+  const today = new Date().toISOString().split('T')[0];
+  // const date = new Date(payload.date).toISOString().split('T')[0];
 
-  const water = {
-    ...payload,
-    date, // використовуємо відформатовану дату
-    userId,
-  };
+  // const water = {
+  //   ...payload,
+  //   date, // використовуємо відформатовану дату
+  //   userId,
+  // };
 
-  const cacheKey = `todayWater-${userId}-${date}`;
+  const cacheKey = `todayWater-${userId}-${today}`;
 
   cache.del(cacheKey);
 

@@ -30,7 +30,7 @@ const createUserData = (user) => ({
   email: user.email ?? null,
   dailyNorm: user.dailyNorm ?? null,
   gender: user.gender ?? null,
-  avatar: user.avatar ?? null,
+  avatarUrl: user.avatarUrl ?? null,
 });
 
 export const register = async (payload) => {

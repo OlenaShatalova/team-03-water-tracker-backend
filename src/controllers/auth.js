@@ -100,7 +100,7 @@ export const sendResetEmailController = async (req, res) => {
     const resetToken = jwt.sign(
       { userId: user._id, email },
       env('JWT_SECRET'),
-      { expiresIn: '15m' },
+      { expiresIn: '20m' },
     );
 
     // Читаємо шаблон листа

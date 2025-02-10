@@ -141,41 +141,41 @@ export const todayWater = async ({ userId }) => {
 };
 
 export const getMonthStatistics = async (userId, month, year) => {
-  const startDate = new Date(year, month - 1, 1);
-  const endDate = new Date(year, month, 0);
-
-  const startDateStr = startDate.toISOString().split('T')[0];
-  const endDateStr = endDate.toISOString().split('T')[0];
+  const startDate = new Date(Date.UTC(year, month - 1, 1));
+  const endDate = new Date(Date.UTC(year, month, 0));
+  const daysInMonth = endDate.getDate();
 
   const waterRecords = await WaterCollection.find({
     userId,
     date: {
-      $gte: startDateStr,
-      $lte: endDateStr,
+      $gte: startDate.toISOString(),
+      $lte: endDate.toISOString(),
     },
   })
     .populate('userId', 'dailyNorm')
     .lean();
 
-  const daysInMonth = endDate.getDate();
+  const recordsByDay = waterRecords.reduce((acc, record) => {
+    const day = new Date(record.date).getDate() - 1;
+    if (!acc[day]) {
+      acc[day] = [];
+    }
+    acc[day].push(record);
+    return acc;
+  }, {});
 
   return Array.from({ length: daysInMonth }, (_, index) => {
+    const dayRecords = recordsByDay[index] || [];
     const currentDate = new Date(Date.UTC(year, month - 1, index + 1));
-    const dateStr = currentDate.toISOString().split('T')[0];
-
-    const dayRecords = waterRecords.filter((record) => record.date === dateStr);
-
+    const dailyNorm = waterRecords[0]?.userId?.dailyNorm || 1500;
     const totalWater = dayRecords.reduce(
       (sum, record) => sum + record.waterVolume,
       0,
     );
 
-    const dailyNorm =
-      dayRecords[0]?.dailyNorm || waterRecords[0]?.userId.dailyNorm || 1500;
-
     return {
       date: {
-        day: currentDate.getDate(),
+        day: index + 1,
         month: currentDate.toLocaleString('en-US', { month: 'long' }),
       },
       dailyNorm: `${(dailyNorm / 1000).toFixed(1)} L`,

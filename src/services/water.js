@@ -1,23 +1,8 @@
 import { UserCollection } from '../db/models/User.js';
 import { WaterCollection } from '../db/models/Water.js';
 
-import NodeCache from 'node-cache';
-
 export const addWaterVolume = async (payload, userId) => {
   const water = { ...payload, userId };
-  const today = new Date().toISOString().split('T')[0];
-  // const date = new Date(payload.date).toISOString().split('T')[0];
-
-  // const water = {
-  //   ...payload,
-  //   date, // використовуємо відформатовану дату
-  //   userId,
-  // };
-
-  const cacheKey = `todayWater-${userId}-${today}`;
-
-  cache.del(cacheKey);
-
   return await WaterCollection.create(water);
 };
 
@@ -27,7 +12,6 @@ export const updateWaterVolume = async (
   userId,
   options = {},
 ) => {
-  const today = new Date().toISOString().split('T')[0];
   const result = await WaterCollection.findOneAndUpdate(
     { _id: waterId, userId },
     payload,
@@ -37,8 +21,6 @@ export const updateWaterVolume = async (
       ...options,
     },
   );
-  const cacheKey = `todayWater-${userId}-${today}`;
-  cache.del(cacheKey);
 
   if (!result || !result.value) return null;
 
@@ -49,26 +31,15 @@ export const updateWaterVolume = async (
 };
 
 export const deleteWaterVolume = async (waterId) => {
-  const today = new Date().toISOString().split('T')[0];
-
   const water = await WaterCollection.findOneAndDelete({
     _id: waterId,
   });
 
-  if (water) {
-    const cacheKey = `todayWater-${water.userId}-${today}`;
-    cache.del(cacheKey);
-  }
-
   return water;
 };
 
-const cache = new NodeCache({ stdTTL: 60 * 60 });
-
 export const todayWater = async ({ userId }) => {
-  const today = new Date().toISOString().split('T')[0];
   const now = new Date();
-
   const todayStart = new Date(
     Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 0, 0, 0, 0),
   ).toISOString();
@@ -76,111 +47,138 @@ export const todayWater = async ({ userId }) => {
     Date.UTC(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59, 999),
   ).toISOString();
 
-  const cacheKey = `todayWater-${userId}-${today}`;
-  const cachedData = cache.get(cacheKey);
-  if (cachedData) {
-    return cachedData;
-  }
   const todayRecord = await WaterCollection.find({
     userId,
     date: { $gte: todayStart, $lte: todayEnd },
   });
+
   const user = await UserCollection.findById(userId);
-  const getDailyNorm = user.dailyNorm;
+  const dailyNorm = user.dailyNorm; // Денна норма
   const totalTodayWater = todayRecord.reduce(
     (sum, r) => sum + r.waterVolume,
     0,
   );
-  const percentTodayWater = Math.round((totalTodayWater / getDailyNorm) * 100);
-  const result = { todayRecord, percentTodayWater };
 
-  cache.set(cacheKey, result);
+  // Відсоток по дню без корекції на час
+  let percentTodayWater = Math.round((totalTodayWater / dailyNorm) * 100);
 
-  // const today = new Date().toISOString().split('T')[0];
+  // Якщо відсоток перевищує 100%, то коригуємо до максимуму 100%
+  percentTodayWater = Math.min(percentTodayWater, 100);
 
-  // const now = new Date();
-  // const timezoneOffset = now.getTimezoneOffset();
-
-  // const todayStart = new Date(now);
-  // todayStart.setMinutes(todayStart.getMinutes() - timezoneOffset); // Корректировка по времени
-
-  // todayStart.setHours(0, 0, 0, 0);
-
-  // const todayEnd = new Date(now);
-  // todayEnd.setMinutes(todayEnd.getMinutes() - timezoneOffset); // Корректировка по времени
-
-  // todayEnd.setHours(23, 59, 59, 999);
-
-  // const cacheKey = `todayWater-${userId}-${today}`;
-  // const cachedData = cache.get(cacheKey);
-
-  // if (cachedData) {
-  //   return cachedData;
-  // }
-
-  // const todayRecord = await WaterCollection.find({
-  //   userId,
-  //   date: today,
-  // { $gte: todayStart, $lte: todayEnd },
-  // });
-
-  // const user = await UserCollection.findById(userId);
-  // const getDailyNorm = user.dailyNorm;
-  // const totalTodayWater = todayRecord.reduce(
-  //   (sum, r) => sum + r.waterVolume,
-  //   0,
-  // );
-
-  // const percentTodayWater = Math.round((totalTodayWater / getDailyNorm) * 100);
-
-  // const result = { todayRecord, percentTodayWater };
-
-  // cache.set(cacheKey, result);
-
-  return result;
+  return {
+    todayRecord,
+    percentTodayWater,
+  };
 };
 
 export const getMonthStatistics = async (userId, month, year) => {
-  const startDate = new Date(Date.UTC(year, month - 1, 1));
-  const endDate = new Date(Date.UTC(year, month, 0));
-  const daysInMonth = endDate.getDate();
+  // Визначення початку і кінця місяця, з урахуванням часового поясу
+  const startDate = new Date(Date.UTC(year, month - 1, 1, 0, 0, 0, 0)); // початок місяця
+  const endDate = new Date(Date.UTC(year, month, 0, 23, 59, 59, 999)); // останній день місяця
 
+  // Перетворення дат у ISO формат для порівняння
+  const startISO = startDate.toISOString();
+  const endISO = endDate.toISOString();
+
+  // Отримуємо всі записи за місяць
   const waterRecords = await WaterCollection.find({
     userId,
-    date: {
-      $gte: startDate.toISOString(),
-      $lte: endDate.toISOString(),
-    },
+    date: { $gte: startISO, $lte: endISO }, // Фільтрація по датах в межах місяця
   })
     .populate('userId', 'dailyNorm')
     .lean();
 
+  // Рахуємо кількість днів у місяці
+  const daysInMonth = new Date(year, month, 0).getDate(); // кількість днів у місяці
+  const dailyNorm = waterRecords[0]?.userId?.dailyNorm || 1500; // денна норма
+
+  // Обчислюємо загальну норму води для місяця
+  const totalNormForMonth = dailyNorm * daysInMonth; // загальна норма за місяць
+
+  // Підраховуємо загальну кількість спожитої води за місяць
+  const totalWaterMonth = waterRecords.reduce(
+    (sum, record) => sum + record.waterVolume,
+    0,
+  );
+
+  // Обчислюємо відсоток спожитої води відносно загальної норми за місяць
+  const percentageMonth = Math.round(
+    (totalWaterMonth / totalNormForMonth) * 100,
+  );
+
+  // Групуємо записи за днями
   const recordsByDay = waterRecords.reduce((acc, record) => {
-    const day = new Date(record.date).getDate() - 1;
-    if (!acc[day]) {
-      acc[day] = [];
+    // Створюємо дату на основі записи і нормалізуємо її до початку доби
+    const recordDate = new Date(record.date);
+    const dayStart = new Date(
+      Date.UTC(
+        recordDate.getUTCFullYear(),
+        recordDate.getUTCMonth(),
+        recordDate.getUTCDate(),
+        0,
+        0,
+        0,
+        0,
+      ),
+    ); // Початок дня
+    const dayEnd = new Date(
+      Date.UTC(
+        recordDate.getUTCFullYear(),
+        recordDate.getUTCMonth(),
+        recordDate.getUTCDate(),
+        23,
+        59,
+        59,
+        999,
+      ),
+    ); // Кінець дня
+
+    // Якщо потрапляє в межі дня, додаємо до групи
+    if (
+      record.date >= dayStart.toISOString() &&
+      record.date <= dayEnd.toISOString()
+    ) {
+      const dayKey = dayStart.toISOString();
+      if (!acc[dayKey]) acc[dayKey] = [];
+      acc[dayKey].push(record);
     }
-    acc[day].push(record);
+
     return acc;
   }, {});
 
+  // Повертаємо статистику по дням і загальний відсоток
   return Array.from({ length: daysInMonth }, (_, index) => {
-    const dayRecords = recordsByDay[index] || [];
-    const currentDate = new Date(Date.UTC(year, month - 1, index + 1));
-    const dailyNorm = waterRecords[0]?.userId?.dailyNorm || 1500;
-    const totalWater = dayRecords.reduce(
+    const currentDay = index + 1;
+    const currentDate = new Date(Date.UTC(year, month - 1, currentDay));
+    const dayKey = currentDate.toISOString(); // ключ для дня
+
+    const dayRecords = recordsByDay[dayKey] || [];
+    const dailyWater = dayRecords.reduce(
       (sum, record) => sum + record.waterVolume,
       0,
-    );
+    ); // спожита вода за день
+    const dailyPercentage = Math.round((dailyWater / dailyNorm) * 100); // відсоток для дня
 
     return {
       date: {
-        day: index + 1,
+        day: currentDay,
         month: currentDate.toLocaleString('en-US', { month: 'long' }),
       },
       dailyNorm: `${(dailyNorm / 1000).toFixed(1)} L`,
-      percentage: `${Math.round((totalWater / dailyNorm) * 100)}%`,
+      percentage: `${dailyPercentage}%`,
       consumptionCount: dayRecords.length,
+      dailyWaterConsumed: dayRecords.map((record) => record.waterVolume), // масив спожитої води за день
     };
-  });
+  }).concat([
+    {
+      date: {
+        day: 'Total',
+        month: 'Month',
+      },
+      dailyNorm: `${(totalNormForMonth / 1000).toFixed(1)} L`,
+      percentage: `${percentageMonth}%`,
+      consumptionCount: waterRecords.length,
+      dailyWaterConsumed: waterRecords.map((record) => record.waterVolume), // масив спожитої води за місяць
+    },
+  ]);
 };
